@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>정책 공지사항 빠른찾기</title>
+<style>
+:root{
+  --bg:#f4f7fb;--panel:#fff;--text:#172033;--muted:#68758a;--line:#dce4ef;
+  --brand:#174f8a;--brand2:#0b6bcb;--soft:#eaf3ff;--shadow:0 10px 28px rgba(23,50,84,.08)
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Noto Sans KR","Pretendard","Malgun Gothic",Arial,sans-serif}
+.wrap{max-width:1180px;margin:0 auto;padding:42px 22px 56px}
+header{margin-bottom:22px}
+.kicker{display:inline-flex;align-items:center;padding:7px 11px;border-radius:999px;background:var(--soft);color:var(--brand);font-size:13px;font-weight:800}
+h1{margin:14px 0 8px;font-size:34px;line-height:1.25;letter-spacing:-.7px}
+.desc{margin:0;color:var(--muted);font-size:15px}
+.toolbar{display:grid;grid-template-columns:1fr 260px;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:var(--shadow);position:sticky;top:12px;z-index:10}
+input,select{width:100%;height:48px;border:1px solid #cbd6e4;border-radius:12px;background:#fff;color:var(--text);font-size:15px;padding:0 14px;outline:none}
+input:focus,select:focus{border-color:var(--brand2);box-shadow:0 0 0 3px rgba(11,107,203,.12)}
+.status{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:22px 2px 12px}
+.count{font-size:16px;font-weight:800}
+.hint{font-size:13px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 4px 16px rgba(23,50,84,.05);transition:.18s ease}
+.card:hover{transform:translateY(-2px);border-color:#c6d5e8;box-shadow:var(--shadow)}
+.badge{display:inline-block;margin-bottom:12px;padding:6px 9px;border-radius:999px;background:var(--soft);color:var(--brand);font-size:12px;font-weight:800}
+.title{margin:0 0 16px;font-size:20px;line-height:1.4;letter-spacing:-.25px}
+dl{display:grid;grid-template-columns:72px 1fr;gap:8px 10px;margin:0;font-size:14px}
+dt{color:var(--muted)}dd{margin:0;font-weight:700}
+.empty{grid-column:1/-1;background:#fff;border:1px dashed #b8c5d6;border-radius:16px;padding:44px;text-align:center;color:var(--muted)}
+footer{margin-top:28px;text-align:center;color:#8793a5;font-size:12px}
+@media(max-width:760px){.wrap{padding:28px 16px 40px}h1{font-size:28px}.toolbar{grid-template-columns:1fr;position:static}.grid{grid-template-columns:1fr}.status{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="kicker">정책 공지 통합조회</span>
+    <h1>정책 공지사항 빠른찾기</h1>
+    <p class="desc">제목 또는 분야를 검색하고, 분야별로 필요한 공지를 빠르게 확인하세요.</p>
+  </header>
+
+  <section class="toolbar" aria-label="정책 공지 검색 및 필터">
+    <input id="searchInput" type="search" placeholder="제목 또는 분야 검색" aria-label="제목 또는 분야 검색" />
+    <select id="fieldFilter" aria-label="분야별 필터"></select>
+  </section>
+
+  <div class="status">
+    <div id="resultCount" class="count">결과 0건</div>
+    <div class="hint">검색어와 분야 필터는 함께 적용됩니다.</div>
+  </div>
+
+  <main id="cardGrid" class="grid" aria-live="polite"></main>
+  <footer>정책 공지사항 내부 조회용 정적 도구</footer>
+</div>
+
+<script>
+const policyNotices = [
+  {
+    "id": 1,
+    "분야": "행정혁신",
+    "제목": "디지털혁신 우수사례 공모",
+    "담당과": "디지털혁신과",
+    "연락처": "044-205-1234"
+  },
+  {
+    "id": 2,
+    "분야": "안전관리",
+    "제목": "여름철 폭우 대비 안전점검",
+    "담당과": "재난관리정책과",
+    "연락처": "044-205-2345"
+  },
+  {
+    "id": 3,
+    "분야": "민원서비스",
+    "제목": "통합민원포털 개편 안내",
+    "담당과": "민원혁신과",
+    "연락처": "044-205-3456"
+  },
+  {
+    "id": 4,
+    "분야": "청렴윤리",
+    "제목": "공직자 청렴교육 정례화",
+    "담당과": "감사담당관실",
+    "연락처": "044-205-4567"
+  },
+  {
+    "id": 5,
+    "분야": "행정혁신",
+    "제목": "공공서비스 사용자 만족도 조사",
+    "담당과": "정책기획관실",
+    "연락처": "044-205-5678"
+  },
+  {
+    "id": 6,
+    "분야": "교육훈련",
+    "제목": "하반기 신규 공무원 합동연수",
+    "담당과": "인재개발과",
+    "연락처": "044-205-6789"
+  },
+  {
+    "id": 7,
+    "분야": "국제협력",
+    "제목": "OECD 디지털정부 워크숍",
+    "담당과": "국제협력담당관실",
+    "연락처": "044-205-7890"
+  },
+  {
+    "id": 8,
+    "분야": "민원서비스",
+    "제목": "모바일 신분증 발급 확대",
+    "담당과": "디지털혁신과",
+    "연락처": "044-205-8901"
+  },
+  {
+    "id": 9,
+    "분야": "안전관리",
+    "제목": "학교 안전점검 결과 발표",
+    "담당과": "안전관리과",
+    "연락처": "044-205-9012"
+  },
+  {
+    "id": 10,
+    "분야": "행정혁신",
+    "제목": "공공데이터 개방 우수기관 시상",
+    "담당과": "데이터정책과",
+    "연락처": "044-205-0123"
+  }
+];
+
+const searchInput = document.getElementById('searchInput');
+const fieldFilter = document.getElementById('fieldFilter');
+const cardGrid = document.getElementById('cardGrid');
+const resultCount = document.getElementById('resultCount');
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
+}
+
+function setupFieldFilter() {
+  const fields = [...new Set(policyNotices.map(item => item['분야']))]
+    .sort((a,b) => a.localeCompare(b, 'ko'));
+  fieldFilter.innerHTML = '<option value="">전체 분야</option>' +
+    fields.map(v => `<option value="${escapeHTML(v)}">${escapeHTML(v)}</option>`).join('');
+}
+
+function render() {
+  const q = searchInput.value.trim().toLowerCase();
+  const selected = fieldFilter.value;
+  const filtered = policyNotices.filter(item => {
+    const title = String(item['제목'] || '').toLowerCase();
+    const field = String(item['분야'] || '').toLowerCase();
+    const keywordMatch = !q || title.includes(q) || field.includes(q);
+    const fieldMatch = !selected || item['분야'] === selected;
+    return keywordMatch && fieldMatch;
+  });
+
+  resultCount.textContent = `결과 ${filtered.length}건`;
+
+  if (!filtered.length) {
+    cardGrid.innerHTML = '<div class="empty">조건에 맞는 정책 공지사항이 없습니다.</div>';
+    return;
+  }
+
+  cardGrid.innerHTML = filtered.map(item => `
+    <article class="card">
+      <span class="badge">${escapeHTML(item['분야'])}</span>
+      <h2 class="title">${escapeHTML(item['제목'])}</h2>
+      <dl>
+        <dt>담당과</dt><dd>${escapeHTML(item['담당과'])}</dd>
+        <dt>연락처</dt><dd>${escapeHTML(item['연락처'])}</dd>
+      </dl>
+    </article>`).join('');
+}
+
+searchInput.addEventListener('input', render);
+fieldFilter.addEventListener('change', render);
+setupFieldFilter();
+render();
+</script>
+</body>
+</html>
