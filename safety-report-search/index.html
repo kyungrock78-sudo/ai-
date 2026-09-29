@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="2026 행정안전부 안전점검 결과 보고서 검색·열람 페이지" />
+  <title>2026 안전점검 보고서 검색</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero">
+      <p class="eyebrow">행정안전부 · 내부 열람용</p>
+      <h1>2026 안전점검 보고서</h1>
+      <p class="hero-copy">보고서 각 장을 빠르게 검색하고 열람할 수 있습니다.</p>
+    </header>
+
+    <section class="search-panel" aria-label="보고서 검색">
+      <div class="search-wrap">
+        <label for="searchInput">제목·본문 검색</label>
+        <div class="search-box">
+          <span class="search-icon" aria-hidden="true">⌕</span>
+          <input
+            id="searchInput"
+            type="search"
+            placeholder="예: 예산, 시정 완료율, 권혁수"
+            autocomplete="off"
+          />
+          <button id="clearButton" type="button" class="clear-button" hidden>초기화</button>
+        </div>
+      </div>
+      <div id="resultCount" class="result-count" aria-live="polite">결과 0건</div>
+    </section>
+
+    <main>
+      <section id="cardGrid" class="card-grid" aria-label="보고서 장 목록"></section>
+      <div id="emptyState" class="empty-state" hidden>
+        <strong>검색 결과가 없습니다.</strong>
+        <span>다른 키워드로 다시 검색해 주세요.</span>
+      </div>
+      <div id="errorState" class="error-state" hidden>
+        <strong>장데이터.json을 불러오지 못했습니다.</strong>
+        <span>정적 웹서버 또는 GitHub Pages에서 열어 주세요.</span>
+      </div>
+    </main>
+
+    <footer>
+      <span>2026 행정안전부 안전점검 결과 보고서 (가상)</span>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
