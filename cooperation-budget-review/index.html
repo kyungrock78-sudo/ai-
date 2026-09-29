@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>지자체 협력사업 예산 자동 판정</title>
+  <style>
+    :root{--bg:#f4f7fb;--panel:#fff;--ink:#172033;--muted:#667085;--line:#dce4ef;--brand:#174f8a;--ok:#16794f;--ok-bg:#eaf8f1;--bad:#b42318;--bad-bg:#fff0ee;--shadow:0 8px 24px rgba(23,50,84,.08)}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans KR","Pretendard","Malgun Gothic",Arial,sans-serif}.wrap{max-width:1180px;margin:0 auto;padding:42px 20px 56px}header{margin-bottom:24px}.eyebrow{display:inline-block;background:#eaf3ff;color:var(--brand);font-weight:800;font-size:13px;padding:7px 11px;border-radius:999px}h1{font-size:34px;line-height:1.25;margin:14px 0 8px;letter-spacing:-.7px}.desc{margin:0;color:var(--muted);font-size:15px}.rule{margin-top:14px;background:#eef5ff;border:1px solid #d5e5f7;border-radius:14px;padding:13px 15px;color:#28435f;font-size:14px}.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:24px 0}.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:var(--shadow)}.card .label{font-size:13px;color:var(--muted);margin-bottom:8px;font-weight:700}.card .value{font-size:30px;font-weight:900;letter-spacing:-.5px}.card .unit{font-size:14px;color:var(--muted);margin-left:4px;font-weight:700}.table-wrap{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow)}table{width:100%;border-collapse:collapse}thead th{background:#f8fafc;color:#44546a;font-size:13px;text-align:left;padding:14px 16px;border-bottom:1px solid var(--line)}tbody td{padding:15px 16px;border-bottom:1px solid #edf1f6;font-size:14px}tbody tr:last-child td{border-bottom:none}.num{text-align:right;font-variant-numeric:tabular-nums}.status{display:inline-flex;align-items:center;justify-content:center;min-width:58px;padding:6px 10px;border-radius:999px;font-size:13px;font-weight:900}.approved{color:var(--ok);background:var(--ok-bg)}.rejected{color:var(--bad);background:var(--bad-bg)}footer{margin-top:18px;color:#8a96a8;font-size:12px;text-align:right}@media(max-width:760px){.wrap{padding:28px 12px 40px}h1{font-size:28px}.summary{grid-template-columns:1fr}.table-wrap{overflow-x:auto}table{min-width:760px}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<span class="eyebrow">자치행정 협력사업 심사</span>
+<h1>지자체별 승인·반려 자동 판정</h1>
+<p class="desc">지자체별 인구수와 신청액을 기준으로 한도액을 계산하고 승인 여부를 자동 판정합니다.</p>
+<div class="rule"><strong>심사규칙</strong> · 한도액 = 인구수 × 10 · 신청액이 한도액보다 크면 <strong>반려</strong>, 같거나 작으면 <strong>승인</strong></div>
+</header>
+<section class="summary" aria-label="심사 요약">
+<div class="card"><div class="label">승인 건수</div><div><span class="value" id="approvedCount">0</span><span class="unit">건</span></div></div>
+<div class="card"><div class="label">반려 건수</div><div><span class="value" id="rejectedCount">0</span><span class="unit">건</span></div></div>
+<div class="card"><div class="label">승인 신청액 합계</div><div><span class="value" id="approvedSum">0</span><span class="unit">원</span></div></div>
+</section>
+<section class="table-wrap">
+<table aria-label="지자체별 협력사업 심사 결과">
+<thead><tr><th>지자체명</th><th class="num">인구수</th><th class="num">신청액</th><th class="num">한도액</th><th>판정</th></tr></thead>
+<tbody id="resultBody"></tbody>
+</table>
+</section>
+<footer>※ 판정 결과는 입력 데이터와 지정된 산식에 따라 자동 계산됩니다.</footer>
+</div>
+<script>
+const applications=[
+{name:'가람군',population:30000,amount:250000},
+{name:'나봄시',population:45000,amount:500000},
+{name:'다솔구',population:80000,amount:600000},
+{name:'라윤시',population:60000,amount:700000},
+{name:'마을군',population:25000,amount:200000},
+{name:'바람시',population:100000,amount:950000},
+{name:'사계구',population:55000,amount:600000},
+{name:'아현시',population:70000,amount:650000},
+{name:'자연군',population:40000,amount:380000},
+{name:'차돌시',population:90000,amount:880000}
+];
+const body=document.getElementById('resultBody');const format=n=>Number(n).toLocaleString('ko-KR');let approvedCount=0,rejectedCount=0,approvedSum=0;
+body.innerHTML=applications.map(item=>{const limit=item.population*10;const approved=item.amount<=limit;if(approved){approvedCount++;approvedSum+=item.amount}else rejectedCount++;return `<tr><td><strong>${item.name}</strong></td><td class="num">${format(item.population)}</td><td class="num">${format(item.amount)}</td><td class="num">${format(limit)}</td><td><span class="status ${approved?'approved':'rejected'}">${approved?'승인':'반려'}</span></td></tr>`}).join('');
+document.getElementById('approvedCount').textContent=approvedCount;document.getElementById('rejectedCount').textContent=rejectedCount;document.getElementById('approvedSum').textContent=format(approvedSum);
+</script>
+</body>
+</html>
