@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>행정정보 통합관리 기본법 조항 검색</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero">
+      <div class="hero__eyebrow">부처 직원용 법령 빠른찾기</div>
+      <h1>(가상) 행정정보 통합관리 기본법</h1>
+      <p class="hero__desc">조항데이터를 기준으로 원하는 키워드가 포함된 조항을 빠르게 검색·열람할 수 있습니다.</p>
+    </header>
+
+    <section class="search-panel" aria-label="조항 검색">
+      <label for="searchInput" class="search-label">본문 키워드 검색</label>
+      <div class="search-row">
+        <div class="search-box">
+          <span class="search-icon" aria-hidden="true">⌕</span>
+          <input
+            id="searchInput"
+            type="search"
+            placeholder="예: 행정안전부장관, 공동활용, 데이터 표준, 과태료"
+            autocomplete="off"
+          />
+          <button id="clearButton" class="clear-button" type="button" aria-label="검색어 지우기">지우기</button>
+        </div>
+        <div id="resultCount" class="result-count" aria-live="polite">결과 0건</div>
+      </div>
+      <p class="search-help">검색어는 조항 본문을 기준으로 필터링됩니다.</p>
+    </section>
+
+    <main>
+      <div id="statusMessage" class="status-message" hidden></div>
+      <section id="cardGrid" class="card-grid" aria-live="polite"></section>
+    </main>
+
+    <footer class="footer">
+      <span>※ 가상자료 기반 내부 열람용 정적 웹페이지</span>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
